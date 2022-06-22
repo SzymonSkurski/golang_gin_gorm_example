@@ -43,7 +43,7 @@ func getAlbumBy(c *gin.Context) {
 	}
 	//try get by title or slug
 	a := album.Album{}
-	if result := db.Where(&album.Album{Title: needle}).Or(&album.Album{Slug: a.GetSlug(needle)}).First(&a); result.Error == nil {
+	if result := db.Where(&album.Album{Title: needle}).Or(&album.Album{Slug: album.GetSlug(needle)}).First(&a); result.Error == nil {
 		albums = append(albums, a)
 		c.IndentedJSON(http.StatusOK, gin.H{"albums": albums})
 		return
