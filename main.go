@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/model/album"
 
@@ -142,10 +141,6 @@ func getMainDBDSN() string {
 		charset,
 		parseTime,
 		loc)
-}
-
-func getSlug(t string) string {
-	return strings.ReplaceAll(t, " ", "_")
 }
 
 func setDevEnv() {
