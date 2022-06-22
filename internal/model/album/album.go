@@ -8,12 +8,12 @@ import (
 )
 
 type Album struct {
-	ID        uint `gorm:"primaryKey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 	Title     string         `json:"title" gorm:"index"`
-	Artist    string         `json:"artist"`
+	ArtistID  uint           `json:"artistID" gorm:"default:0;index;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;check:artist_id > 0"`
 	Slug      string         `json:"slug" gorm:"unique"`
 	Price     int            `json:"price"`
 }
