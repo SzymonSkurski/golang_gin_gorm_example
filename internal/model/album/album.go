@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// album always belong to one Artist by ArtistID FK manyToOne
 type Album struct {
 	ID        uint           `gorm:"primaryKey" json:"id"`
 	CreatedAt time.Time      `json:"createdAt"`

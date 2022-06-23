@@ -17,19 +17,22 @@ func main() {
 func router() {
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"192.168.1.1:8080"})
-	router.GET("/migrate", handler.Migrate)
-	router.GET("/albums/artist/:id", albumHandler.GetAlbumsByArtistID)
-	router.GET("/albums/:needle", albumHandler.GetAlbumBy)
-	router.GET("/albums", albumHandler.GetAlbums)
-	router.POST("/albums", albumHandler.PostAlbums)
-	router.DELETE("albums/:id", albumHandler.Delete)
-	//Artists
-	router.GET("/artists/:needle", artistHandler.GetArtistBy)
-	router.GET("/artists", artistHandler.GetArtists)
-	router.POST("/artists", artistHandler.PostArtists)
-	router.DELETE("artists/:id", artistHandler.Delete)
+	// router.GET("/migrate", handler.Migrate)
+	// router.GET("/albums/artist/:id", albumHandler.GetAlbumsByArtistID)
+	// router.GET("/albums/:needle", albumHandler.GetAlbumBy)
+	// router.GET("/albums", albumHandler.GetAlbums)
+	// router.POST("/albums", albumHandler.PostAlbums)
+	// router.DELETE("albums/:id", albumHandler.Delete)
+	// //Artists
+	// router.GET("/artists/albums/:id", artistHandler.GetArtistByIDWithAlbums)
+	// router.GET("/artists/:needle", artistHandler.GetArtistBy)
+	// router.GET("/artists", artistHandler.GetArtists)
+	// router.POST("/artists", artistHandler.PostArtists)
+	// router.DELETE("artists/:id", artistHandler.Delete)
 	router.Run("localhost:8080")
 }
+
+func getRoutesDefinition() ()
 
 func setDevEnv() {
 	os.Setenv("DB_PASSWORD", "")

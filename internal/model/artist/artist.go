@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// related to albums oneToMany
+// Artist could own many albums oneToMany
 type Artist struct {
 	ID        uint `gorm:"primaryKey" json:"id"`
 	CreatedAt time.Time
