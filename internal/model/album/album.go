@@ -19,16 +19,19 @@ type Album struct {
 }
 
 func (album *Album) BeforeCreate(tx *gorm.DB) (err error) {
-	//additional data validation here
-	//create clug
-	album.Slug = GetSlug(album.Title)
-	return
+	//create slug
+	updateSlug(album)
+	return nil
 }
 
 func (album *Album) BeforeUpdate(tx *gorm.DB) (err error) {
 	//update slug
+	updateSlug(album)
+	return nil
+}
+
+func updateSlug(album *Album) {
 	album.Slug = GetSlug(album.Title)
-	return
 }
 
 func GetSlug(t string) string {

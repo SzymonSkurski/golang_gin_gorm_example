@@ -2,12 +2,14 @@ package artist
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/model/album"
 	"gorm.io/gorm"
 )
 
+// related to albums oneToMany
 type Artist struct {
 	ID        uint `gorm:"primaryKey" json:"id"`
 	CreatedAt time.Time
@@ -17,22 +19,26 @@ type Artist struct {
 	Surname   string         `gorm:"not null;check:surname !=\"\"" json:"surname"`
 	Slug      string         `gorm:"not null; index; unique" json:"slug"`
 	BirthDate time.Time      `gorm:"not null" json:"birthDate"`
-	DeathDate time.Time      `gorm:"default:null" json:"deathDate"`
-	Albums    []album.Album
+	DeathDate time.Time      `gorm:"default:null;check:death_date >= birth_date" json:"deathDate"`
+	Albums    []album.Album  `gorm:"foreignKey:ArtistID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 func (a *Artist) BeforeCreate(tx *gorm.DB) (err error) {
 	//create slug
-	a.Slug = GetSlug(a)
+	updateSlug(a)
 	return
 }
 
 func (a *Artist) BeforeUpdate(tx *gorm.DB) (err error) {
 	//update slug
-	a.Slug = GetSlug(a)
+	updateSlug(a)
 	return
 }
 
-func GetSlug(a *Artist) string {
-	return fmt.Sprintf("%v_%v", a.Name, a.Surname)
+func updateSlug(a *Artist) {
+	a.Slug = GetSlug(fmt.Sprintf("%v %v", a.Name, a.Surname))
+}
+
+func GetSlug(s string) string {
+	return strings.ReplaceAll(s, " ", "_")
 }

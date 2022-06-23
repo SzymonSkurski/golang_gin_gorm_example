@@ -3,23 +3,51 @@ package artistHandler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB/mainDB"
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/model/artist"
+	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/paginator"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func GetAlbums(c *gin.Context) {
+func GetArtists(c *gin.Context) {
 	// Get all records
 	artists := []artist.Artist{}
 	db := mainDB.GetDB()
-	result := db.Find(&artists)
+	result := db.Scopes(paginator.Paginate(c.Request)).Find(&artists)
 	if result.Error != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"error": result.Error})
 	} else {
-		c.IndentedJSON(http.StatusOK, artists)
+		c.IndentedJSON(http.StatusOK, gin.H{"artists": artists, "paginator": paginator.PaginateInfo(c.Request)})
 	}
+}
+
+func GetArtistBy(c *gin.Context) {
+	artists := []artist.Artist{}
+	needle := c.Param("needle")
+	db := mainDB.GetDB()
+	if id, err := strconv.ParseUint(needle, 0, 64); err == nil {
+		//get by ID
+		a := artist.Artist{ID: uint(id)}
+		if result := db.First(&a); result.Error == nil {
+			artists = append(artists, a)
+			c.IndentedJSON(http.StatusOK, gin.H{"artists": artists})
+			return
+		}
+	}
+	//try get by name or surname or by slug
+	a := artist.Artist{}
+	if result := db.Where(&artist.Artist{Name: needle}).
+		Or(&artist.Artist{Surname: needle}).
+		Or(&artist.Artist{Slug: artist.GetSlug(needle)}).
+		First(&a); result.Error == nil {
+		artists = append(artists, a)
+		c.IndentedJSON(http.StatusOK, gin.H{"artists": artists})
+		return
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "artist not found"})
 }
 
 // postAlbums adds an album from JSON received in the request body.
@@ -33,7 +61,6 @@ func PostArtists(c *gin.Context) {
 	}
 
 	db := mainDB.GetDB()
-	migrate(db)
 
 	// Create & insert
 	result := db.Create(&newArtist)
@@ -55,7 +82,7 @@ func Delete(c *gin.Context) {
 	}
 }
 
-func migrate(db *gorm.DB) {
+func Migrate(db *gorm.DB) {
 	// Migrate the schema
 	e := db.AutoMigrate(&artist.Artist{})
 	if e != nil {
