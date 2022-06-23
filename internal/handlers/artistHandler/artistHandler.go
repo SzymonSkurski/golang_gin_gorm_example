@@ -50,12 +50,12 @@ func GetArtistBy(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "artist not found"})
 }
 
-func GetArtistByIDWithAlbums(c *gin.Context) {
+func GetArtistsAlbums(c *gin.Context) {
 	artists := []artist.Artist{}
 	sID := c.Param("id")
 	id, _ := strconv.ParseUint(sID, 0, 64)
 	db := mainDB.GetDB()
-	//get artist by ID and preload related Albums
+	//get artist by ID and preload related
 	a := artist.Artist{ID: uint(id)}
 	if result := db.Preload("Albums").First(&a); result.Error == nil {
 		artists = append(artists, a)

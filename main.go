@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB/mainDB"
 	handler "github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers"
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/albumHandler"
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/artistHandler"
@@ -11,28 +12,33 @@ import (
 
 func main() {
 	setDevEnv()
+	migrate()
 	router()
 }
 
 func router() {
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"192.168.1.1:8080"})
-	// router.GET("/migrate", handler.Migrate)
-	// router.GET("/albums/artist/:id", albumHandler.GetAlbumsByArtistID)
-	// router.GET("/albums/:needle", albumHandler.GetAlbumBy)
-	// router.GET("/albums", albumHandler.GetAlbums)
-	// router.POST("/albums", albumHandler.PostAlbums)
-	// router.DELETE("albums/:id", albumHandler.Delete)
-	// //Artists
-	// router.GET("/artists/albums/:id", artistHandler.GetArtistByIDWithAlbums)
-	// router.GET("/artists/:needle", artistHandler.GetArtistBy)
-	// router.GET("/artists", artistHandler.GetArtists)
-	// router.POST("/artists", artistHandler.PostArtists)
-	// router.DELETE("artists/:id", artistHandler.Delete)
+	router.GET("/migrate", handler.Migrate)
+	router.GET("/albums/artist/:id", albumHandler.GetAlbumsByArtistID)
+	router.GET("/albums/:needle", albumHandler.GetAlbumBy)
+	router.GET("/albums", albumHandler.GetAlbums)
+	router.POST("/albums", albumHandler.PostAlbums)
+	router.DELETE("albums/:id", albumHandler.Delete)
+	//Artists
+	router.GET("/artists/albums/:id", artistHandler.GetArtistsAlbums)
+	router.GET("/artists/:needle", artistHandler.GetArtistBy)
+	router.GET("/artists", artistHandler.GetArtists)
+	router.POST("/artists", artistHandler.PostArtists)
+	router.DELETE("artists/:id", artistHandler.Delete)
 	router.Run("localhost:8080")
 }
 
-func getRoutesDefinition() ()
+func migrate() {
+	db := mainDB.GetDB()
+	artistHandler.Migrate(db)
+	albumHandler.Migrate(db)
+}
 
 func setDevEnv() {
 	os.Setenv("DB_PASSWORD", "")
