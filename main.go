@@ -18,7 +18,7 @@ func main() {
 
 func router() {
 	router := gin.Default()
-	router.SetTrustedProxies([]string{"192.168.1.1:8080"})
+	// router.SetTrustedProxies([]string{"192.168.1.1:8080"})
 	router.GET("/migrate", handler.Migrate)
 	router.GET("/albums/artist/:id", albumHandler.GetAlbumsByArtistID)
 	router.GET("/albums/:needle", albumHandler.GetAlbumBy)
@@ -31,21 +31,30 @@ func router() {
 	router.GET("/artists", artistHandler.GetArtists)
 	router.POST("/artists", artistHandler.PostArtists)
 	router.DELETE("artists/:id", artistHandler.Delete)
-	router.Run("localhost:8080")
+	router.Run("0.0.0.0:8080") //don't use localhost:8080 to avoid (56) error in docker environment
 }
 
 func migrate() {
 	db := mainDB.GetDB()
+	db.Exec("CREATE DATABASE IF NOT EXISTS example")
 	artistHandler.Migrate(db)
 	albumHandler.Migrate(db)
 }
 
 func setDevEnv() {
-	os.Setenv("DB_PASSWORD", "")
-	os.Setenv("DB_USER", "root")
-	os.Setenv("DB_HOST", "127.0.0.1")
-	os.Setenv("DB_NAME", "example")
-	os.Setenv("DB_PORT", "3306")
+	env := map[string]string{
+		"DB_PASSWORD": "root",
+		"DB_USER":     "root",
+		"DB_HOST":     "localhost",
+		"DB_NAME":     "example",
+		"DB_PORT":     "3306",
+	}
+	for e, v := range env {
+		if os.Getenv(e) == "" {
+			os.Setenv(e, v) // set default env
+		}
+	}
+	// run docker container inspect mariadb-server bridge.IPAddress to get db i
 }
 
 // func isNumeric(s string) bool {

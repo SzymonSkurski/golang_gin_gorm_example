@@ -19,10 +19,12 @@ func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func PaginateInfo(r *http.Request) map[string]int {
+func PaginateInfo(r *http.Request, db *gorm.DB) map[string]int {
+	size := getPageSize(r)
 	p := map[string]int{
-		"pageSize": getPageSize(r),
-		"page":     getPageNo(r),
+		"pageSize": size,
+		"pageNo":   getPageNo(r),
+		"pages":    getPagesNumber(size, int(countPages(db))),
 	}
 	return p
 }
@@ -46,4 +48,21 @@ func getPageNo(r *http.Request) int {
 		page = 1
 	}
 	return page
+}
+
+func getPagesNumber(size int, count int) int {
+	if size < 1 || count < 1 {
+		return 0
+	}
+	c := count / size
+	if size%count != 0 {
+		c++
+	}
+	return c
+}
+
+func countPages(db *gorm.DB) int64 {
+	var count int64
+	db.Count(&count)
+	return count
 }

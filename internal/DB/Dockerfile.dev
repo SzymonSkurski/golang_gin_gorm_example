@@ -1,0 +1,7 @@
+FROM mariadb:latest
+
+ENV MARIADB_USER="root"
+ENV MARIADB_ROOT_PASSWORD="root"
+ENV MARIADB_DATABASE="example"
+
+CMD [ "executable" ]

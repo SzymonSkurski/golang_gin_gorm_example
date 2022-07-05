@@ -12,6 +12,10 @@ import (
 	"gorm.io/gorm"
 )
 
+func getDBModel(db *gorm.DB) (tx *gorm.DB) {
+	return db.Model(artist.Artist{})
+}
+
 func GetArtists(c *gin.Context) {
 	// Get all records
 	artists := []artist.Artist{}
@@ -20,7 +24,7 @@ func GetArtists(c *gin.Context) {
 	if result.Error != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"error": result.Error})
 	} else {
-		c.IndentedJSON(http.StatusOK, gin.H{"artists": artists, "paginator": paginator.PaginateInfo(c.Request)})
+		c.IndentedJSON(http.StatusOK, gin.H{"artists": artists, "paginator": paginator.PaginateInfo(c.Request, getDBModel(db))})
 	}
 }
 

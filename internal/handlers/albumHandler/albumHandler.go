@@ -12,10 +12,15 @@ import (
 	"gorm.io/gorm"
 )
 
+func getDBModel(db *gorm.DB) (tx *gorm.DB) {
+	return db.Model(album.Album{})
+}
+
 func GetAlbums(c *gin.Context) {
 	// Get all records
 	albums := []album.Album{}
 	db := mainDB.GetDB()
+
 	result := db.Scopes(paginator.Paginate(c.Request)).Find(&albums)
 	// SELECT * FROM users;
 
@@ -23,7 +28,7 @@ func GetAlbums(c *gin.Context) {
 	if result.Error != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"error": result.Error})
 	} else {
-		c.IndentedJSON(http.StatusOK, gin.H{"albums": albums, "paginator": paginator.PaginateInfo(c.Request)})
+		c.IndentedJSON(http.StatusOK, gin.H{"albums": albums, "paginator": paginator.PaginateInfo(c.Request, getDBModel(db))})
 	}
 }
 

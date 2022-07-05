@@ -1,0 +1,32 @@
+# syntax=docker/dockerfile:1.0
+
+# Build
+FROM golang:1.18.3-alpine3.16 as builder
+
+WORKDIR /go-app
+
+COPY go.mod ./
+COPY go.sum ./
+# intall git
+RUN apk update && apk add git
+RUN go mod download
+
+COPY *.go ./
+COPY internal ./internal
+RUN go get github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB/mainDB
+RUN go get github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers
+RUN go get github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/albumHandler
+RUN go get github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/artistHandler
+
+RUN go build -o wp-go .
+
+# Run
+FROM alpine:3.16
+WORKDIR /go-app
+COPY --from=builder /go-app/wp-go .
+
+EXPOSE 8080
+
+CMD ["./wp-go"]
+
+# docker run --name wp-go -e DB_HOST="172.17.0.2" -p 8080:8080 wp-go
