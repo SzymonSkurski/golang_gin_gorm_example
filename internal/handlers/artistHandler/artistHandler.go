@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB/mainDB"
+	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB"
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/model/artist"
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/paginator"
 	"github.com/gin-gonic/gin"
@@ -19,7 +19,7 @@ func getDBModel(db *gorm.DB) (tx *gorm.DB) {
 func GetArtists(c *gin.Context) {
 	// Get all records
 	artists := []artist.Artist{}
-	db := mainDB.GetDB()
+	db := DB.GetMainDB()
 	result := db.Scopes(paginator.Paginate(c.Request)).Find(&artists)
 	if result.Error != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"error": result.Error})
@@ -31,7 +31,7 @@ func GetArtists(c *gin.Context) {
 func GetArtistBy(c *gin.Context) {
 	artists := []artist.Artist{}
 	needle := c.Param("needle")
-	db := mainDB.GetDB()
+	db := DB.GetMainDB()
 	if id, err := strconv.ParseUint(needle, 0, 64); err == nil {
 		//get by ID
 		a := artist.Artist{ID: uint(id)}
@@ -58,7 +58,7 @@ func GetArtistsAlbums(c *gin.Context) {
 	artists := []artist.Artist{}
 	sID := c.Param("id")
 	id, _ := strconv.ParseUint(sID, 0, 64)
-	db := mainDB.GetDB()
+	db := DB.GetMainDB()
 	//get artist by ID and preload related
 	a := artist.Artist{ID: uint(id)}
 	if result := db.Preload("Albums").First(&a); result.Error == nil {
@@ -77,7 +77,7 @@ func PostArtists(c *gin.Context) {
 		return
 	}
 
-	db := mainDB.GetDB()
+	db := DB.GetMainDB()
 
 	// Create & insert
 	result := db.Create(&newArtist)
@@ -90,7 +90,7 @@ func PostArtists(c *gin.Context) {
 
 func Delete(c *gin.Context) {
 	id := c.Param("id")
-	db := mainDB.GetDB()
+	db := DB.GetMainDB()
 
 	if res := db.Delete(&artist.Artist{}, id); res.Error == nil {
 		c.IndentedJSON(http.StatusOK, gin.H{"message": "deleted"})

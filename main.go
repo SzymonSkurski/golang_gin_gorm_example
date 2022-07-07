@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB/mainDB"
+	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB"
 	handler "github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers"
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/albumHandler"
 	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/artistHandler"
@@ -31,12 +31,12 @@ func router() {
 	router.GET("/artists", artistHandler.GetArtists)
 	router.POST("/artists", artistHandler.PostArtists)
 	router.DELETE("artists/:id", artistHandler.Delete)
-	router.Run("0.0.0.0:8080") //don't use localhost:8080 to avoid (56) error in docker environment
+	router.Run(":8080") //don't use localhost:8080 to avoid (56) error in docker environment
 }
 
 func migrate() {
-	db := mainDB.GetDB()
-	db.Exec("CREATE DATABASE IF NOT EXISTS example")
+	DB.GetRootDB().Exec("CREATE DATABASE IF NOT EXISTS example")
+	db := DB.GetMainDB()
 	artistHandler.Migrate(db)
 	albumHandler.Migrate(db)
 }

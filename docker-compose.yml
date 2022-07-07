@@ -1,5 +1,6 @@
 version: '3.4'
 services:
+  # Database
   db:
     container_name: db
     restart: unless-stopped
@@ -9,8 +10,8 @@ services:
       - MARIADB_USER=root
       - MARIADB_ROOT_PASSWORD=root
       - MARIADB_DATABASE=example
-    # volumes:
-    #   - db:/var/lib/mysql
+    volumes:
+      - ./DB/initdb/:/docker-entrypoint-initdb.d
   phpmyadmin:
     container_name: st-pma
     restart: unless-stopped
