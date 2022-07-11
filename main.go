@@ -17,7 +17,7 @@ func main() {
 }
 
 func router() {
-	router := gin.Default()
+	router := gin.Default() // default will use midleware
 	// router.SetTrustedProxies([]string{"192.168.1.1:8080"})
 	router.GET("/migrate", handler.Migrate)
 	router.GET("/albums/artist/:id", albumHandler.GetAlbumsByArtistID)
