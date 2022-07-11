@@ -31,7 +31,7 @@ func router() {
 	router.GET("/artists", artistHandler.GetArtists)
 	router.POST("/artists", artistHandler.PostArtists)
 	router.DELETE("artists/:id", artistHandler.Delete)
-	router.Run(":8080") //don't use localhost:8080 to avoid (56) error in docker environment
+	router.Run(":8080") //don't use localhost:8080 to avoid (56) error in docker env
 }
 
 func migrate() {
