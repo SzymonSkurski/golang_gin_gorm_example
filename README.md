@@ -1,4 +1,4 @@
-# golang_gin_grom_example
+# golang_gin_gorm_example
 
 gin + GORM REST API example
 
