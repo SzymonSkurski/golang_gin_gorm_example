@@ -3,8 +3,8 @@ package artistHandler
 import (
 	"fmt"
 
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB"
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/model/artist"
+	"github.com/SzymonSkurski/golang_gin_grom_example/internal/DB"
+	"github.com/SzymonSkurski/golang_gin_grom_example/internal/model/artist"
 )
 
 func GetArtistByID(id uint) (error, artist.Artist) {

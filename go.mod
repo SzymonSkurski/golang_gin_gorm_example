@@ -1,4 +1,4 @@
-module github.com/SzymonSkursrki/golang_gin_grom_example
+module github.com/SzymonSkurski/golang_gin_grom_example
 
 go 1.17
 

@@ -13,10 +13,10 @@ RUN go mod download
 
 COPY *.go ./
 COPY internal ./internal
-RUN go get github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB/mainDB
-RUN go get github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers
-RUN go get github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/albumHandler
-RUN go get github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/artistHandler
+RUN go get github.com/SzymonSkurski/golang_gin_grom_example/internal/DB/mainDB
+RUN go get github.com/SzymonSkurski/golang_gin_grom_example/internal/handlers
+RUN go get github.com/SzymonSkurski/golang_gin_grom_example/internal/handlers/albumHandler
+RUN go get github.com/SzymonSkurski/golang_gin_grom_example/internal/handlers/artistHandler
 
 RUN go build -o wp-go .
 

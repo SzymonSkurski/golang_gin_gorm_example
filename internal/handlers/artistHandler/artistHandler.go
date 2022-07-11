@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB"
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/model/artist"
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/paginator"
+	"github.com/SzymonSkurski/golang_gin_grom_example/internal/DB"
+	"github.com/SzymonSkurski/golang_gin_grom_example/internal/model/artist"
+	"github.com/SzymonSkurski/golang_gin_grom_example/internal/paginator"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )

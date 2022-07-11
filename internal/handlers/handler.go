@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/DB"
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/albumHandler"
-	"github.com/SzymonSkursrki/golang_gin_grom_example/internal/handlers/artistHandler"
+	"github.com/SzymonSkurski/golang_gin_grom_example/internal/DB"
+	"github.com/SzymonSkurski/golang_gin_grom_example/internal/handlers/albumHandler"
+	"github.com/SzymonSkurski/golang_gin_grom_example/internal/handlers/artistHandler"
 	"github.com/gin-gonic/gin"
 )
 
