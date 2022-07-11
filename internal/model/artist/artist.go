@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/SzymonSkurski/golang_gin_grom_example/internal/model/album"
+	"github.com/SzymonSkurski/golang_gin_gorm_example/internal/model/album"
 	"gorm.io/gorm"
 )
 

@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/SzymonSkurski/golang_gin_grom_example/internal/DB"
-	handler "github.com/SzymonSkurski/golang_gin_grom_example/internal/handlers"
-	"github.com/SzymonSkurski/golang_gin_grom_example/internal/handlers/albumHandler"
-	"github.com/SzymonSkurski/golang_gin_grom_example/internal/handlers/artistHandler"
+	"github.com/SzymonSkurski/golang_gin_gorm_example/internal/DB"
+	handler "github.com/SzymonSkurski/golang_gin_gorm_example/internal/handlers"
+	"github.com/SzymonSkurski/golang_gin_gorm_example/internal/handlers/albumHandler"
+	"github.com/SzymonSkurski/golang_gin_gorm_example/internal/handlers/artistHandler"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,13 +18,17 @@ func main() {
 
 func router() {
 	router := gin.Default() // default will use midleware
+	api := router.Group("/api")
+	apiArtist := api.Group("/albums")
+	apiArtist.GET("artist/:id", albumHandler.GetAlbumsByArtistID)
+	apiArtist.GET("/:needle", albumHandler.GetAlbumBy)
+	apiArtist.GET("/", albumHandler.GetAlbums)
+	apiArtist.POST("/", albumHandler.PostAlbums)
+	apiArtist.DELETE("/:id", albumHandler.Delete)
+
 	// router.SetTrustedProxies([]string{"192.168.1.1:8080"})
 	router.GET("/migrate", handler.Migrate)
-	router.GET("/albums/artist/:id", albumHandler.GetAlbumsByArtistID)
-	router.GET("/albums/:needle", albumHandler.GetAlbumBy)
-	router.GET("/albums", albumHandler.GetAlbums)
-	router.POST("/albums", albumHandler.PostAlbums)
-	router.DELETE("albums/:id", albumHandler.Delete)
+
 	//Artists
 	router.GET("/artists/albums/:id", artistHandler.GetArtistsAlbums)
 	router.GET("/artists/:needle", artistHandler.GetArtistBy)
